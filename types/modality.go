@@ -2,6 +2,9 @@ package types
 
 // Modality represents a DICOM modality configuration
 type Modality struct {
+	// Orthanc Name or ID for this Modality
+	Name string `json:"Name,omitempty"`
+
 	// Application Entity Title (AET) of the remote modality
 	AET string `json:"AET"`
 

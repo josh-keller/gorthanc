@@ -35,7 +35,7 @@ func NewClient(baseURL string, opts ...ClientOption) (*Client, error) {
 		},
 	}
 
-	// Apply options 
+	// Apply options
 	for _, opt := range opts {
 		opt(client)
 	}
@@ -162,3 +162,4 @@ func (c *Client) put(path string, body interface{}, result interface{}) error {
 
 	return nil
 }
+
