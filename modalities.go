@@ -173,24 +173,28 @@ func (c *Client) StoreToModalityWithOptions(modalityName string, request *types.
 	return &result, nil
 }
 
-func (m *Modality) Query(request *types.ModalityFindRequest) (string, error) {
+func (m *Modality) Query(request *types.ModalityFindRequest) (*Query, error) {
 	return m.client.QueryModality(m.Name, request)
 }
 
-func (c *Client) QueryModality(modalityName string, request *types.ModalityFindRequest) (string, error) {
+func (c *Client) QueryModality(modalityName string, request *types.ModalityFindRequest) (*Query, error) {
 	path := fmt.Sprintf("modalities/%s/query", modalityName)
 
 	var queryResponse map[string]interface{}
 	if err := c.post(path, request, &queryResponse); err != nil {
-		return "", err
+		return nil, err
 	}
 
 	// Extract the query ID from the response
 	queryID, ok := queryResponse["ID"].(string)
 	if !ok {
-		return "", fmt.Errorf("failed to get query ID from response")
+		return nil, fmt.Errorf("failed to get query ID from response")
 	}
-	return queryID, nil
+	return &Query{
+		ID:     queryID,
+		Level:  Level(request.Level),
+		client: c,
+	}, nil
 }
 
 func (m *Modality) Find(request *types.ModalityFindRequest, answers interface{}) error {
@@ -198,13 +202,13 @@ func (m *Modality) Find(request *types.ModalityFindRequest, answers interface{})
 }
 
 func (c *Client) FindInModality(modalityName string, request *types.ModalityFindRequest, answers interface{}) error {
-	queryID, err := c.QueryModality(modalityName, request)
+	query, err := c.QueryModality(modalityName, request)
 	if err != nil {
 		return err
 	}
 
 	// TODO: Turn 'expand' and 'simplify' into new parameters or options, so the user can change based on what is needs
-	answersPath := fmt.Sprintf("queries/%s/answers?expand=true&simplify=true", queryID)
+	answersPath := fmt.Sprintf("queries/%s/answers?expand=true&simplify=true", query.ID)
 
 	// var answers []map[string]interface{}
 	if err := c.get(answersPath, &answers); err != nil {

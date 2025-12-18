@@ -1,41 +1,5 @@
 package types
 
-// Modality represents a DICOM modality configuration
-type Modality struct {
-	// Orthanc Name or ID for this Modality
-	Name string `json:"Name,omitempty"`
-
-	// Application Entity Title (AET) of the remote modality
-	AET string `json:"AET"`
-
-	// Host/IP address of the remote modality
-	Host string `json:"Host"`
-
-	// Port number of the remote modality
-	Port int `json:"Port"`
-
-	// Manufacturer name (optional)
-	Manufacturer string `json:"Manufacturer,omitempty"`
-
-	// Whether to allow echo requests
-	AllowEcho *bool `json:"AllowEcho,omitempty"`
-
-	// Whether to allow C-FIND requests
-	AllowFind *bool `json:"AllowFind,omitempty"`
-
-	// Whether to allow C-GET requests
-	AllowGet *bool `json:"AllowGet,omitempty"`
-
-	// Whether to allow C-MOVE requests
-	AllowMove *bool `json:"AllowMove,omitempty"`
-
-	// Whether to allow C-STORE requests
-	AllowStore *bool `json:"AllowStore,omitempty"`
-
-	// Timeout for DICOM operations (in seconds)
-	Timeout int `json:"Timeout,omitempty"`
-}
-
 // ModalityCreateRequest represents a request to create or update a modality
 type ModalityCreateRequest struct {
 	// Application Entity Title (AET) of the remote modality
